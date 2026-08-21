@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Tạo và đọc mã QR trực tiếp trên trình duyệt.">
+  <title>QR Code · My Tools</title>
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="./qr-code.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../">← My Tools</a>
+    <button id="themeToggle" class="icon-btn" type="button" aria-label="Đổi giao diện">☾</button>
+  </header>
+
+  <main class="qr-container">
+    <section class="page-heading">
+      <span class="eyebrow">QR CODE</span>
+      <h1>Tạo & đọc mã QR</h1>
+      <p>Mọi thao tác đều được xử lý ngay trong trình duyệt.</p>
+    </section>
+
+    <div class="qr-tabs" role="tablist">
+      <button class="tab active" data-tab="generate" role="tab">Text → QR</button>
+      <button class="tab" data-tab="scan" role="tab">Ảnh QR → Text</button>
+    </div>
+
+    <section id="generatePanel" class="panel tab-panel active-panel">
+      <div class="generator-layout">
+        <div>
+          <label for="qrText">Nội dung</label>
+          <textarea id="qrText" rows="9" placeholder="Nhập text, URL, Wi-Fi config..."></textarea>
+          <div class="row-actions">
+            <button id="clearText" class="btn" type="button">Xóa</button>
+            <button id="copyText" class="btn" type="button">Copy text</button>
+          </div>
+        </div>
+
+        <div class="preview-column">
+          <div id="qrPreview" class="qr-preview">
+            <span>Nhập nội dung để tạo QR</span>
+          </div>
+          <button id="downloadQr" class="btn primary" type="button" disabled>Tải PNG</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="scanPanel" class="panel tab-panel">
+      <div id="dropZone" class="drop-zone">
+        <div class="drop-icon">▧</div>
+        <h2>Thả ảnh QR vào đây</h2>
+        <p>Hoặc chọn file, kéo ảnh vào trang, hay <strong>Ctrl/Cmd + V</strong> để paste ảnh.</p>
+        <input id="fileInput" type="file" accept="image/*" hidden>
+        <button id="chooseFile" class="btn primary" type="button">Chọn ảnh</button>
+      </div>
+
+      <div class="scanner-layout">
+        <div class="scan-image-wrap">
+          <img id="scanImage" alt="Ảnh QR được chọn" hidden>
+          <span id="scanPlaceholder">Ảnh QR sẽ xuất hiện ở đây</span>
+        </div>
+        <div>
+          <label for="scanResult">Kết quả</label>
+          <textarea id="scanResult" rows="9" readonly placeholder="Nội dung QR sẽ xuất hiện ở đây..."></textarea>
+          <div class="row-actions">
+            <button id="copyResult" class="btn" type="button">Copy kết quả</button>
+            <button id="clearScan" class="btn" type="button">Xóa</button>
+          </div>
+        </div>
+      </div>
+      <p id="scanStatus" class="status" aria-live="polite"></p>
+    </section>
+
+    <p class="privacy-note">🔒 Không upload ảnh hay nội dung QR lên server.</p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="../../assets/js/app.js"></script>
+  <script src="./qr-code.js"></script>
+</body>
+</html>
