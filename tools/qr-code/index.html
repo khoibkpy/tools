@@ -32,6 +32,7 @@
           <label for="qrText">Nội dung</label>
           <textarea id="qrText" rows="9" placeholder="Nhập text, URL, Wi-Fi config..."></textarea>
           <div class="row-actions">
+            <button id="generateBtn" class="btn primary" type="button">Tạo QR</button>
             <button id="clearText" class="btn" type="button">Xóa</button>
             <button id="copyText" class="btn" type="button">Copy text</button>
           </div>
@@ -75,7 +76,7 @@
     <p class="privacy-note">🔒 Không upload ảnh hay nội dung QR lên server.</p>
   </main>
 
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script src="../../assets/js/app.js"></script>
   <script src="./qr-code.js"></script>

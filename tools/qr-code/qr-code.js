@@ -2,6 +2,7 @@
   const $ = (s) => document.querySelector(s);
 
   const qrText = $("#qrText");
+  const generateBtn = $("#generateBtn");
   const qrPreview = $("#qrPreview");
   const downloadQr = $("#downloadQr");
   const clearText = $("#clearText");
@@ -27,6 +28,12 @@
       return;
     }
 
+    if (typeof QRCode === "undefined") {
+      qrPreview.innerHTML = "<span>Không thể tải thư viện QRCode.</span>";
+      downloadQr.disabled = true;
+      return;
+    }
+
     const canvas = document.createElement("canvas");
     QRCode.toCanvas(canvas, text, {
       errorCorrectionLevel: "M",
@@ -44,6 +51,8 @@
       downloadQr.disabled = false;
     });
   }
+
+  generateBtn?.addEventListener("click", generateQr);
 
   let timer;
   qrText.addEventListener("input", () => {
