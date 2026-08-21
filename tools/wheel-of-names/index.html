@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vòng quay may mắn ngẫu nhiên (Wheel of Names) với thuật toán ngẫu nhiên bảo mật cao, tùy chỉnh tỉ lệ, thêm/xóa mục linh hoạt.">
+  <title>Wheel of Names · Vòng Quay May Mắn · My Tools</title>
+  <link rel="stylesheet" href="../../assets/css/global.css">
+  <link rel="stylesheet" href="./wheel-of-names.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="../../">← My Tools</a>
+    <div class="topbar-actions">
+      <button id="themeToggle" class="icon-btn" type="button" aria-label="Đổi giao diện">☾</button>
+    </div>
+  </header>
+
+  <main class="wheel-container">
+    <section class="page-heading">
+      <span class="eyebrow">RANDOM PICKER</span>
+      <h1>Wheel of Names</h1>
+      <p>Vòng quay may mắn với thuật toán ngẫu nhiên Crypto API, hỗ trợ tùy biến tỉ lệ và quản lý danh sách thông minh.</p>
+    </section>
+
+    <div class="wheel-layout">
+      <!-- Cột trái: Vòng quay & Điều khiển -->
+      <section class="panel wheel-stage-panel">
+        <div class="wheel-wrapper">
+          <div class="pointer-indicator" aria-hidden="true">
+            <svg viewBox="0 0 40 50" class="pointer-svg">
+              <polygon points="20,48 2,8 38,8" class="pointer-body" />
+              <polygon points="20,44 6,12 34,12" class="pointer-inner" />
+            </svg>
+          </div>
+          <canvas id="wheelCanvas" width="600" height="600" aria-label="Vòng quay"></canvas>
+          <button id="centerSpinBtn" class="center-spin-btn" type="button" title="Nhấn để quay">QUAY</button>
+        </div>
+
+        <div class="stage-controls">
+          <button id="spinBtn" class="btn primary spin-main-btn" type="button">
+            <span class="btn-icon">🎲</span> QUAY NGAY (Space)
+          </button>
+          <div class="stage-options">
+            <label class="toggle-control">
+              <input id="soundToggle" type="checkbox" checked>
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">🔊 Âm thanh</span>
+            </label>
+            <label class="toggle-control">
+              <input id="autoRemoveToggle" type="checkbox">
+              <span class="toggle-slider"></span>
+              <span class="toggle-label">🗑 Tự xóa khi trúng</span>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cột phải: Quản lý danh sách & Tỉ lệ -->
+      <section class="panel entries-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Danh sách mục (<span id="entryCount">2</span>)</h2>
+            <span class="sub-text">Chỉnh sửa tên và tỉ lệ % xuất hiện</span>
+          </div>
+          <div class="header-actions">
+            <button id="shuffleBtn" class="btn small" type="button" title="Xáo trộn thứ tự">🔀 Xáo</button>
+            <button id="equalizeBtn" class="btn small" type="button" title="Chia đều tỉ lệ % cho tất cả">⚖ Chia đều</button>
+          </div>
+        </div>
+
+        <!-- Thêm nhanh / Nhập hàng loạt -->
+        <div class="add-entry-bar">
+          <input id="newEntryInput" type="text" placeholder="Nhập tên mục mới..." maxlength="50" autocomplete="off">
+          <input id="newEntryWeight" type="number" min="1" max="1000" value="1" placeholder="Hệ số" title="Trọng số / Hệ số tỉ lệ">
+          <button id="addEntryBtn" class="btn primary" type="button">Thêm</button>
+        </div>
+
+        <!-- Bulk import toggle -->
+        <div class="bulk-toggle-wrap">
+          <button id="toggleBulkBtn" class="text-btn" type="button">+ Nhập danh sách nhiều dòng</button>
+          <div id="bulkArea" class="bulk-area hidden">
+            <textarea id="bulkInput" rows="4" placeholder="Nhập mỗi dòng một mục (VD:&#10;Tên A&#10;Tên B&#10;Tên C)"></textarea>
+            <div class="row-actions">
+              <button id="applyBulkBtn" class="btn primary small" type="button">Áp dụng danh sách</button>
+              <button id="cancelBulkBtn" class="btn small" type="button">Hủy</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách items -->
+        <div id="entryList" class="entry-list" role="list"></div>
+
+        <!-- Lịch sử trúng giải -->
+        <div class="history-section">
+          <div class="history-header">
+            <h3>Lịch sử quay</h3>
+            <button id="clearHistoryBtn" class="text-btn small" type="button">Xóa lịch sử</button>
+          </div>
+          <div id="historyList" class="history-list">
+            <span class="empty-hint">Chưa có kết quả nào.</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Modal thông báo người chiến thắng -->
+    <div id="winnerModal" class="modal-backdrop hidden" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+        <div class="modal-content">
+          <span class="winner-eyebrow">🎉 CHÚC MỪNG CHIẾN THẮNG! 🎉</span>
+          <h2 id="winnerName" class="winner-name">1</h2>
+          <p id="winnerMeta" class="winner-meta">Tỉ lệ trúng: 50%</p>
+          <div class="modal-actions">
+            <button id="modalSpinAgainBtn" class="btn primary" type="button">Quay tiếp</button>
+            <button id="modalRemoveBtn" class="btn danger" type="button">Xóa khỏi vòng quay</button>
+            <button id="modalCloseBtn" class="btn" type="button">Đóng</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="privacy-note">🔒 Sử dụng Web Cryptography API (`crypto.getRandomValues`) đảm bảo tính ngẫu nhiên công bằng tuyệt đối.</p>
+  </main>
+
+  <script src="../../assets/js/app.js"></script>
+  <script src="./wheel-of-names.js"></script>
+</body>
+</html>
